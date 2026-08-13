@@ -59,6 +59,15 @@
 - 상황: 날씨, 대기질, 음식 API는 서로 다른 서버이므로 일부만 실패할 수 있습니다.
 - 해결: 추가 API를 독립 상태로 관리하고 `Promise.allSettled`를 사용했습니다. 음식 API 실패 시 내부 날씨 추천을 표시하고, 대기질 실패 시 경고만 보여 주며 상세 날씨는 유지합니다.
 
+### GNews 무료 플랜의 외부 주소 CORS 제한
+
+- 증상: GNews 뉴스는 `localhost`에서는 정상 표시되지만 같은 공유기의 IP 주소와 GitHub Pages 배포 주소에서는 표시되지 않았습니다.
+- 원인: GNews 무료 플랜은 브라우저 CORS 요청을 localhost에서만 허용하므로 공개 도메인에서 실행되는 Vue가 API를 직접 호출할 수 없습니다.
+- 해결: `scripts/fetch-news.mjs`가 GitHub Actions 서버에서 GNews를 호출해 기사 10개를 `public/data/news.json`으로 생성하도록 변경했습니다. 메인 뉴스 티커와 지역 상세 뉴스는 이 정적 JSON 파일을 공통으로 읽습니다.
+- 자동화: `.github/workflows/deploy.yml`은 `main` 푸시, 수동 실행과 6시간 주기 실행 때 뉴스 JSON을 갱신한 후 GitHub Pages를 배포합니다.
+- 장애 대응: API 키 누락, 사용량 초과 또는 GNews 장애가 발생하면 기존 JSON 캐시를 유지해 배포 화면에서 마지막 정상 뉴스를 계속 제공합니다.
+- 보안 개선: GNews 키와 직접 API 주소를 Vue 브라우저 번들에서 제거하고 저장소 Secret에서만 사용하도록 했습니다.
+
 ## 3. 특별한 설계 상황
 
 - 실제 지역은 OpenWeather의 실시간 날씨와 좌표 기반 대기질을 사용합니다.
