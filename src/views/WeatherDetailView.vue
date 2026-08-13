@@ -28,8 +28,7 @@ const API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY
 const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather'
 const AIR_URL = 'https://api.openweathermap.org/data/2.5/air_pollution'
 const MEAL_URL = 'https://www.themealdb.com/api/json/v1/1'
-const NEWS_URL = 'https://gnews.io/api/v4/top-headlines'
-const GNEWS_API_KEY = import.meta.env.VITE_GNEWS_API_KEY
+const NEWS_URL = `${import.meta.env.BASE_URL}data/news.json`
 const publicPath = (fileName) => `${import.meta.env.BASE_URL}weather-examples/${fileName}`
 
 const cityMapping = {
@@ -95,17 +94,11 @@ const fetchAirQuality = async (coord) => {
 }
 
 const fetchKoreanNews = async () => {
-  if (!GNEWS_API_KEY) {
-    newsError.value = 'GNews API 키를 설정하면 한국 최신 기사가 표시됩니다.'
-    return
-  }
   newsLoading.value = true
   newsError.value = ''
   try {
-    const response = await axios.get(NEWS_URL, {
-      params: { category: 'general', country: 'kr', lang: 'ko', max: 4, apikey: GNEWS_API_KEY },
-    })
-    newsArticles.value = (response.data.articles || []).map((article) => ({
+    const response = await axios.get(NEWS_URL, { params: { t: Date.now() } })
+    newsArticles.value = (response.data.articles || []).slice(0, 4).map((article) => ({
       title: article.title,
       url: article.url,
       source: article.source?.name || '언론사',
@@ -113,8 +106,8 @@ const fetchKoreanNews = async () => {
     }))
     if (!newsArticles.value.length) newsError.value = '현재 표시할 최신 기사가 없습니다.'
   } catch (error) {
-    console.error('GNews API 실패:', error)
-    newsError.value = '최신 뉴스를 불러오지 못했습니다. GNews API 키와 사용량을 확인해 주세요.'
+    console.error('뉴스 캐시 로딩 실패:', error)
+    newsError.value = '최신 뉴스 파일을 불러오지 못했습니다.'
   } finally {
     newsLoading.value = false
   }

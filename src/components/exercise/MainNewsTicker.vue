@@ -10,15 +10,9 @@ let rotationTimer
 const currentArticle = computed(() => articles.value[currentIndex.value] || null)
 
 const fetchHeadlines = async () => {
-  const apiKey = import.meta.env.VITE_GNEWS_API_KEY
-  if (!apiKey) {
-    isLoading.value = false
-    return
-  }
-
   try {
-    const response = await axios.get('https://gnews.io/api/v4/top-headlines', {
-      params: { category: 'general', country: 'kr', lang: 'ko', max: 10, apikey: apiKey },
+    const response = await axios.get(`${import.meta.env.BASE_URL}data/news.json`, {
+      params: { t: Date.now() },
     })
     articles.value = response.data.articles || []
     if (articles.value.length > 1) {

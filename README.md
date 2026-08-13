@@ -4,6 +4,8 @@
 
 GitHub 주소: https://github.com/helloyunseong/skala-vue
 
+뉴스는 GitHub Actions가 GNews API에서 6시간마다 받아 정적 JSON으로 제공하므로 localhost뿐 아니라 GitHub Pages에서도 표시됩니다.
+
 Vue 3와 Vite를 사용한 날씨 대시보드 종합실습 프로젝트입니다. 수업 중 작성하는 개념 예제는 `practice`, 과제로 제출하는 종합실습은 `exercise`로 분리했습니다.
 
 ## 실행 방법
