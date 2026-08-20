@@ -1,8 +1,6 @@
 # SKALA Vue 종합실습
 
-배포 주소: https://helloyunseong.github.io/skala-vue/
 
-GitHub 주소: https://github.com/helloyunseong/skala-vue
 
 뉴스는 GitHub Actions가 GNews API에서 6시간마다 받아 정적 JSON으로 제공하므로 localhost뿐 아니라 GitHub Pages에서도 표시됩니다.
 
