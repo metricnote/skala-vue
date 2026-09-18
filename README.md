@@ -1,4 +1,4 @@
-# SKALA Vue 종합실습
+# Vue 종합실습
 
 
 
